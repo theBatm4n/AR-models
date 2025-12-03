@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tap to See in AR</title>
+
+  <!-- Model Viewer (one line = everything) -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+  <style>
+    body { margin:0; padding:0; background:#000; overflow:hidden; }
+    model-viewer { width:100vw; height:100vh; }
+
+    /* Huge friendly AR button for phones */
+    #ar-button {
+      position: absolute;
+      left: 50%;
+      bottom: 20vh;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.95);
+      color: #000;
+      font-size: 22px;
+      font-weight: bold;
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 18px 40px;
+      border-radius: 50px;
+      border: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      z-index: 100;
+      white-space: nowrap;
+    }
+    /* Hide the default button, we use our own bigger one */
+    model-viewer::part(default-ar-button) { display: none; }
+  </style>
+</head>
+<body>
+
+  <model-viewer
+  src="./tripo_convert_40e209c5-c26e-4e33-82aa-0543fba09980.glb"
+  alt="AR Artwork"
+  auto-rotate
+  camera-controls
+  autoplay
+  shadow-intensity="2"
+  ar
+  ar-modes="webxr scene-viewer quick-look"
+  ar-placement="floor"
+  ar-scale="fixed"
+  xr-environment>
+
+    <!-- Big mobile-friendly button -->
+    <button slot="ar-button" id="ar-button">
+      Place in your space
+    </button>
+
+  </model-viewer>
+
+  <!-- Auto-activate AR on mobile the second the model loads (magic!) -->
+  <script>
+    const modelViewer = document.querySelector("model-viewer");
+    modelViewer.addEventListener('load', () => {
+      // On mobile, try to activate AR immediately after 1 second
+      if (window.innerWidth < 1000) {  // rough mobile check
+        setTimeout(() => {
+          modelViewer.activateAR();
+        }, 1200);
+      }
+    });
+  </script>
+
+</body>
+</html>
